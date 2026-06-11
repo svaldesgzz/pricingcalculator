@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Source xlsx files (kept locally for refresh; excluded from repo by default —
+# remove these lines if you want them tracked in the private test repo)
+*.xlsx
+
+# Generated / debug outputs (these are produced by scripts/refresh.ps1 and
+# scripts/validate_catalogs.py and should not be tracked)
+web/validation-report.json
+web/hypothesis_findings.json
+web/perth-discovery.json
+web/lux_la_discovery.json
+
+# OneDrive temp lock files
+~$*
+
+# Editor / OS
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Local-only artifacts
+*.log

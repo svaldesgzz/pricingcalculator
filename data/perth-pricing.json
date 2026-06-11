@@ -1,0 +1,6 @@
+{
+  "generatedAt": "2026-05-19T20:22:22+00:00",
+  "sourceFile": "MOCK \u2014 Luxembourg x 1.05 (Perth xlsx is DRM-encrypted)",
+  "isMock": true,
+  "notice": "Replace with a real export from the Perth meter file when available; the catalog already references region 'perth' with priceMultiplier=1.05."
+}
