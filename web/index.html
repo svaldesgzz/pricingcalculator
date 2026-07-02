@@ -46,21 +46,27 @@
 
   .app { max-width: 1280px; margin: 0 auto; padding: 24px 28px 64px; }
 
+  .ms-bar {
+    display: flex; align-items: center;
+    padding: 6px 0 14px;
+  }
+  .ms-logo { height: 21px; width: auto; display: block; }
+
   header.site {
-    display: flex; align-items: center; gap: 16px;
-    padding-bottom: 20px;
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+    padding: 12px 0 24px;
     border-bottom: 1px solid var(--stroke);
     flex-wrap: wrap;
+    text-align: center;
   }
-  .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .brand { display: flex; align-items: center; gap: 16px; min-width: 0; }
   .brand-mark {
-    width: 32px; height: 32px;
-    background: linear-gradient(135deg, var(--azure-blue-600), #50E6FF);
-    border-radius: var(--radius-1);
-    box-shadow: var(--shadow-1);
+    width: 44px; height: 44px;
+    display: block;
+    flex: 0 0 auto;
   }
   .brand-text { display: flex; flex-direction: column; min-width: 0; }
-  .brand-text strong { font-size: 16px; font-weight: 600; letter-spacing: -0.005em; }
+  .brand-text strong { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
   .brand-text span { color: var(--ink-2); font-size: 12px; }
   .region-picker {
     margin-left: auto;
@@ -109,6 +115,12 @@
     color: var(--ink-2);
     text-transform: uppercase; letter-spacing: .06em;
     margin: 0 0 12px;
+  }
+  .panel-note {
+    margin: -4px 0 14px;
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.4;
   }
 
   .service-grid {
@@ -312,6 +324,12 @@
     align-self: start;
   }
   .summary h2 {
+    margin: 0 0 12px;
+    font-size: 13px; color: var(--ink-2);
+    text-transform: uppercase; letter-spacing: .06em;
+    font-weight: 600;
+  }
+  .summary .summary-sub {
     margin: 0 0 4px;
     font-size: 12px; color: var(--ink-2);
     text-transform: uppercase; letter-spacing: .08em;
@@ -326,10 +344,11 @@
   .summary .currency-line {
     color: var(--ink-2); font-size: 12px; margin-bottom: 16px;
   }
+  .summary .summary-sub + .total { margin-top: 4px; }
   .summary .data-source-line {
     color: var(--ink-3);
     font-size: 11px;
-    margin-top: -12px;
+    margin-top: 0;
     margin-bottom: 16px;
   }
   .summary .breakdown {
@@ -389,6 +408,18 @@
     display: flex; gap: 10px; align-items: flex-start;
   }
   .top-notice svg { flex-shrink: 0; margin-top: 2px; }
+  .top-notice .notice-body { min-width: 0; }
+  .top-notice .notice-title {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .top-notice .notice-list {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .top-notice .notice-list li { margin: 2px 0; }
+  .top-notice .notice-list li + li { margin-top: 4px; }
   .top-notice .live-debug {
     margin-left: 8px;
     font-size: 11px;
@@ -456,29 +487,106 @@
     color: var(--ink-3);
     margin-left: auto;
   }
+  .pricing-mode .pm-inline-note {
+    font-size: 12px;
+    color: var(--ink-2);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .zone-bar select {
+    width: auto;
+    min-width: 240px;
+  }
+
+  /* Per-line-item pricing model select */
+  .line-item .pricing-select {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--stroke);
+  }
+  .line-item .pricing-select label {
+    font-size: 12px;
+    color: var(--ink-2);
+    font-weight: 600;
+  }
+  .line-item .pricing-select select {
+    max-width: 260px;
+    width: auto;
+  }
+  .line-item .pricing-select .savings {
+    font-size: 12px;
+    color: #107C10;
+    font-weight: 600;
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+  }
+  .line-item .pricing-select .pm-only-label {
+    font-size: 12px;
+    color: var(--ink-2);
+    font-weight: 600;
+  }
+  .line-item .pricing-select .pm-only-note {
+    font-size: 12px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+
+  /* Annual estimate row in summary (legacy inline style; replaced by parallel
+     monthly/annual blocks — kept minimal for safety) */
+
 
   @media print {
     .service-grid, .actions, .region-picker, .sku-picker, .pricing-mode { display: none !important; }
     .summary { position: static; box-shadow: none; }
     body { background: white; }
-  }
-</style>
+  }</style>
 </head>
 <body>
 <div class="app">
 
+  <div class="ms-bar">
+    <svg class="ms-logo" viewBox="0 0 108 23" role="img" aria-label="Microsoft" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="0" width="10.5" height="10.5" fill="#F25022"/>
+      <rect x="11.5" y="0" width="10.5" height="10.5" fill="#7FBA00"/>
+      <rect x="0" y="11.5" width="10.5" height="10.5" fill="#00A4EF"/>
+      <rect x="11.5" y="11.5" width="10.5" height="10.5" fill="#FFB900"/>
+      <text x="28" y="17.5" fill="#737373" font-family="'Segoe UI','Segoe UI Web (West European)',-apple-system,'Helvetica Neue',Arial,sans-serif" font-size="18.5" font-weight="600" letter-spacing="-0.2">Microsoft</text>
+    </svg>
+  </div>
+
   <header class="site">
     <div class="brand">
-      <div class="brand-mark" aria-hidden="true"></div>
+      <svg class="brand-mark" viewBox="0 0 96 96" role="img" aria-label="Microsoft Azure" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="azBlue" x1="60.919" y1="9.602" x2="18.75" y2="134.423" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#114A8B"/>
+            <stop offset="1" stop-color="#0669BC"/>
+          </linearGradient>
+          <linearGradient id="azShadow" x1="74.117" y1="67.772" x2="64.344" y2="71.076" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-opacity=".3"/>
+            <stop offset=".071" stop-opacity=".2"/>
+            <stop offset=".321" stop-opacity=".1"/>
+            <stop offset=".623" stop-opacity=".05"/>
+            <stop offset="1" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="azCyan" x1="69.643" y1="5.982" x2="115.948" y2="129.505" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#3CCBF4"/>
+            <stop offset="1" stop-color="#2892DF"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#azBlue)" d="M33.338 6.544h26.038l-27.03 80.087a4.152 4.152 0 0 1-3.933 2.824H8.149a4.145 4.145 0 0 1-3.928-5.47L29.404 9.368a4.152 4.152 0 0 1 3.934-2.824z"/>
+        <path fill="#0078D4" d="M71.175 60.261h-41.29a1.911 1.911 0 0 0-1.305 3.309l26.532 24.764a4.171 4.171 0 0 0 2.846 1.121h23.38z"/>
+        <path fill="url(#azShadow)" d="M33.338 6.544a4.118 4.118 0 0 0-3.943 2.879L4.252 83.917a4.14 4.14 0 0 0 3.908 5.494h20.787a4.443 4.443 0 0 0 3.411-2.9l5.014-14.777 17.91 16.705a4.237 4.237 0 0 0 2.666.972H81.24L71.024 60.261l-29.781.007L59.47 6.544z"/>
+        <path fill="url(#azCyan)" d="M66.595 9.364a4.145 4.145 0 0 0-3.928-2.82H33.648a4.146 4.146 0 0 1 3.928 2.82l25.184 74.62a4.146 4.146 0 0 1-3.928 5.472h29.02a4.146 4.146 0 0 0 3.927-5.472z"/>
+      </svg>
       <div class="brand-text">
-        <strong>Azure Extended Zones</strong>
-        <span>Monthly cost estimator</span>
+        <strong>Azure Extended Zones: Pricing Calculator</strong>
       </div>
-    </div>
-
-    <div class="region-picker">
-      <label for="regionSelect">Extended Zone</label>
-      <select id="regionSelect" style="width: 220px;"></select>
     </div>
   </header>
 
@@ -486,25 +594,26 @@
     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
       <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm.75 10.5h-1.5v-1.5h1.5v1.5Zm0-3h-1.5v-4h1.5v4Z"/>
     </svg>
-    <span>Pricing is for approximate estimation only and should not be considered an official quote. Similarly, figures do not include taxes, support, or any discount programs. Verify final figures with your Microsoft account team.</span>
+    <div class="notice-body">
+      <strong class="notice-title">Please note:</strong>
+      <ul class="notice-list">
+        <li>Pricing is for approximate estimation only and should not be considered an official quote. Figures do not include taxes, support, or any discount programs. Verify final figures with your Microsoft account team.</li>
+        <li>While this tool provides the right pricing for a given SKU, please refer to the <a href="https://learn.microsoft.com/azure/extended-zones/overview" target="_blank" rel="noopener">Azure Extended Zones documentation</a> for service availability.</li>
+      </ul>
+    </div>
+    <!-- Live-data controls (Azure Pricing API integration) intentionally hidden while the calculator is driven by the uploaded workbook only.
     <button type="button" id="loadLiveBtn" style="margin-left: 16px; padding: 4px 12px; font-size: 12px; border: 1px solid var(--stroke); background: var(--surface-2); border-radius: 4px; cursor: pointer;" title="Fetch latest pricing from Azure Pricing API (Extended Zones only)">Load live data</button>
     <span id="liveStatus" style="margin-left: 12px; font-size: 12px; color: var(--ink-3);"></span>
     <details class="live-debug" id="liveDebug" hidden>
       <summary>Live load diagnostics</summary>
       <pre id="liveDebugText"></pre>
     </details>
+    -->
   </div>
 
-  <div class="pricing-mode" role="group" aria-label="Pricing model">
-    <span class="pm-label">Pricing model</span>
-    <div class="pm-segments" id="pricingMode">
-      <button type="button" data-mode="payg" class="active">Pay-as-you-go</button>
-      <button type="button" data-mode="sp1y">Savings Plan 1Y</button>
-      <button type="button" data-mode="sp3y">Savings Plan 3Y</button>
-      <button type="button" data-mode="ri1y">Reserved 1Y</button>
-      <button type="button" data-mode="ri3y">Reserved 3Y</button>
-    </div>
-    <span class="pm-note" id="pricingModeNote">Meters without a discount fall back to pay-as-you-go.</span>
+  <div class="pricing-mode zone-bar" role="group" aria-label="Extended Zone">
+    <label class="pm-label" for="regionSelect">Extended Zone</label>
+    <select id="regionSelect"></select>
   </div>
 
   <main>
@@ -512,12 +621,13 @@
 
       <section class="panel">
         <h2>① Pick a service</h2>
+        <p class="panel-note">If available, Savings Plans and Reserved Instances pricing will be shown upon selection of specific SKUs.</p>
         <div class="service-grid" id="serviceGrid"></div>
         <div id="skuPicker"></div>
       </section>
 
       <section class="panel">
-        <h2>② Your estimate</h2>
+        <h2>② Edit selection details</h2>
         <div id="lineItems">
           <div class="empty" id="emptyState">
             <div class="big">No services yet</div>
@@ -529,9 +639,15 @@
     </div>
 
     <aside class="summary" aria-label="Cost summary">
-      <h2>Estimated monthly cost</h2>
+      <h2>③ See your estimate</h2>
+      <h3 class="summary-sub">Estimated monthly cost</h3>
       <div class="total" id="totalAmount" aria-live="polite">$0.00</div>
-      <div class="currency-line"><span id="currencyLabel">USD</span> · pay-as-you-go</div>
+      <div class="currency-line"><span id="currencyLabel">USD</span> · monthly estimate</div>
+
+      <h3 class="summary-sub">Estimated annual cost</h3>
+      <div class="total" id="annualAmount" aria-live="polite">$0.00</div>
+      <div class="currency-line"><span id="currencyLabelAnnual">USD</span> · annual estimate</div>
+
       <div class="data-source-line" id="dataSourceStamp">Data source: unknown</div>
 
       <div class="breakdown" id="breakdown">
@@ -555,11 +671,12 @@
 <!-- Inline-fallback copy of the catalog so the page works under file:// where
      fetch() may be blocked. Rewritten by scripts/inline_catalog.py. -->
 <script id="inlineCatalog" type="application/json">{
-  "generatedAt": "2026-05-28T18:54:01+00:00",
+  "generatedAt": "2026-07-02T21:57:50+00:00",
   "dataSource": {
     "kind": "uploaded-file",
-    "label": "Uploaded file snapshot",
-    "generator": "scripts/extract_catalog.py"
+    "label": "Full AEZ List (uploaded file snapshot)",
+    "generator": "scripts/extract_catalog.py",
+    "sourceFile": "20260626-Full AEZ List June 2026.xlsx"
   },
   "currency": "USD",
   "regions": [
@@ -26049,7 +26166,7 @@
       "id": "storage",
       "name": "Storage",
       "icon": "disk",
-      "skuCount": 231,
+      "skuCount": 229,
       "skus": [
         {
           "productName": "Azure Elastic SAN",
@@ -27020,8 +27137,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 1560.96,
-            "perth": 1324.795824,
+            "luxembourg": 0.01,
+            "perth": 0.01,
             "losangeles": 946.08
           }
         },
@@ -27031,8 +27148,6 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 2973.255,
-            "perth": 2523.424618,
             "losangeles": 0.0
           }
         },
@@ -27042,8 +27157,6 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 5946.51,
-            "perth": 5046.835233,
             "losangeles": 0.0
           }
         },
@@ -27496,8 +27609,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 1560.96,
-            "perth": 1324.795824,
+            "luxembourg": 0.01,
+            "perth": 0.01,
             "losangeles": 946.08
           }
         },
@@ -27527,18 +27640,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 2973.255,
-            "perth": 2523.424618,
-            "losangeles": 1802.06
-          }
-        },
-        {
-          "productName": "Premium SSD Managed Disks",
-          "skuName": "P70 - Special",
-          "meterType": "1 Disk/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 1572.864
+            "luxembourg": 0.01,
+            "perth": 0.01
           }
         },
         {
@@ -27558,18 +27661,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 5946.51,
-            "perth": 5046.835233,
-            "losangeles": 3604.11
-          }
-        },
-        {
-          "productName": "Premium SSD Managed Disks",
-          "skuName": "P80 - Special",
-          "meterType": "1 Disk/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 3145.632
+            "luxembourg": 0.01,
+            "perth": 0.01
           }
         },
         {
@@ -27842,9 +27935,7 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 1716.39,
-            "perth": 0.01,
-            "losangeles": 1310.72
+            "perth": 0.01
           }
         },
         {
@@ -28316,7 +28407,7 @@
           "unitType": "month",
           "rates": {
             "luxembourg": 921.6,
-            "perth": 1170.062674,
+            "perth": 0.01,
             "losangeles": 921.6
           }
         },
@@ -28348,9 +28439,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 1843.2,
-            "perth": 2340.139351,
-            "losangeles": 1843.2
+            "luxembourg": 0.01,
+            "perth": 0.01
           }
         },
         {
@@ -28381,9 +28471,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 3686.4,
-            "perth": 4680.278702,
-            "losangeles": 3686.4
+            "luxembourg": 0.01,
+            "perth": 0.01
           }
         },
         {
@@ -28496,7 +28585,7 @@
       "id": "expressroute",
       "name": "ExpressRoute",
       "icon": "bandwidth",
-      "skuCount": 95,
+      "skuCount": 89,
       "skus": [
         {
           "productName": "ExpressRoute",
@@ -28504,7 +28593,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 6450.0
+            "losangeles": 436.0
           }
         },
         {
@@ -28531,7 +28620,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 54300.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28585,7 +28674,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 12900.0
+            "losangeles": 872.0
           }
         },
         {
@@ -28612,7 +28701,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 1300.0
+            "losangeles": 295.0
           }
         },
         {
@@ -28639,7 +28728,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 28650.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28693,7 +28782,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 3150.0
+            "losangeles": 690.0
           }
         },
         {
@@ -28783,16 +28872,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 20000.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Direct",
-          "skuName": "10 Gbps",
-          "meterType": "1 Port/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 56000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28837,16 +28917,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 200000.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Direct",
-          "skuName": "100 Gbps",
-          "meterType": "1 Port/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 250000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28891,7 +28962,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 4000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28927,7 +28998,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 5000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28963,7 +29034,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 2000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -29008,7 +29079,7 @@
           "meterType": "1 Port/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 3300.0
+            "losangeles": 0.01
           }
         },
         {
@@ -29017,7 +29088,7 @@
           "meterType": "1 Port/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 33000.0
+            "losangeles": 0.01
           }
         },
         {
@@ -29094,15 +29165,6 @@
         {
           "productName": "ExpressRoute Global Reach",
           "skuName": "10 Gbps",
-          "meterType": "1 Circuit/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 5000.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Global Reach",
-          "skuName": "10 Gbps",
           "meterType": "Data Transfer In (GB)",
           "unitType": "unit",
           "rates": {
@@ -29116,15 +29178,6 @@
           "unitType": "unit",
           "rates": {
             "losangeles": 0.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Global Reach",
-          "skuName": "100 Gbps",
-          "meterType": "1 Circuit/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 21250.0
           }
         },
         {
@@ -29229,15 +29282,6 @@
         {
           "productName": "ExpressRoute Global Reach",
           "skuName": "40 Gbps",
-          "meterType": "1 Circuit/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 10500.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Global Reach",
-          "skuName": "40 Gbps",
           "meterType": "Data Transfer In (GB)",
           "unitType": "unit",
           "rates": {
@@ -29251,15 +29295,6 @@
           "unitType": "unit",
           "rates": {
             "losangeles": 0.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Global Reach",
-          "skuName": "5 Gbps",
-          "meterType": "1 Circuit/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 2180.0
           }
         },
         {
@@ -30843,36 +30878,6 @@
           }
         }
       ]
-    },
-    {
-      "id": "azure-site-recovery",
-      "name": "Azure Site Recovery",
-      "icon": "disk",
-      "skuCount": 2,
-      "skus": [
-        {
-          "productName": "Azure Site Recovery",
-          "skuName": "Azure",
-          "meterType": "1 VM Replicated to Azure/Month",
-          "unitType": "month",
-          "rates": {
-            "luxembourg": 33.75,
-            "perth": 0.01,
-            "losangeles": 25.0
-          }
-        },
-        {
-          "productName": "Azure Site Recovery",
-          "skuName": "System Center",
-          "meterType": "1 VM Replicated to System Center/Month",
-          "unitType": "month",
-          "rates": {
-            "luxembourg": 21.6,
-            "perth": 0.01,
-            "losangeles": 16.0
-          }
-        }
-      ]
     }
   ]
 }</script>
@@ -30901,18 +30906,19 @@
   let regionId = "luxembourg";
   let activeServiceId = null;
   let pickerQuery = "";
-  let pricingMode = "payg"; // payg | sp1y | sp3y | ri1y | ri3y
+  // Pricing model is per-line-item (see item.mode). The picker/browser always
+  // shows PAYG rates; discounted models are chosen after adding a SKU.
   let catalogSourceLabel = "Unknown";
-  /** @type {{id:string, serviceId:string, skuKey:string, count:number, qty:number}[]} */
+  /** @type {{id:string, serviceId:string, skuKey:string, count:number, qty:number, mode:string}[]} */
   let items = [];
   let nextId = 1;
 
   const PRICING_MODE_LABELS = {
     payg: "Pay-as-you-go",
-    sp1y: "Savings Plan 1Y",
-    sp3y: "Savings Plan 3Y",
-    ri1y: "Reserved 1Y",
-    ri3y: "Reserved 3Y",
+    sp1y: "Savings Plan 1 year",
+    sp3y: "Savings Plan 3 year",
+    ri1y: "Reserved 1 year",
+    ri3y: "Reserved 3 year",
   };
 
   // ---------- Boot ----------
@@ -30920,50 +30926,16 @@
     catalog = await loadCatalog();
     regionId = catalog.regions[0].id;
     renderRegionPicker();
-    renderPricingModePicker();
     renderServiceGrid();
     renderFooter();
     recompute();
-    
-    // Wire up live data button.
-    const liveBtn = $("#loadLiveBtn");
-    if (liveBtn) {
-      liveBtn.addEventListener("click", async () => {
-        liveBtn.disabled = true;
-        const result = await fetchLivePricingCatalog(true);
-        if (result) {
-          catalog = result;
-          regionId = catalog.regions[0].id;
-          items = [];
-          renderRegionPicker();
-          renderServiceGrid();
-          renderFooter();
-          recompute();
-          const status = $("#liveStatus");
-          if (status) status.textContent = "Loaded latest API snapshot (catalog-live.json).";
-        } else {
-          const status = $("#liveStatus");
-          if (status && !status.textContent) status.textContent = "Using static data";
-        }
-        liveBtn.disabled = false;
-      });
-    }
+    // Live-data (Azure Pricing API) integration is intentionally disabled
+    // while the calculator is driven by the uploaded workbook only. The
+    // fetchLivePricingCatalog helper below is kept for future re-enable.
   }
 
   async function loadCatalog() {
-    // Try localStorage cache first (from live API fetch).
-    const cached = localStorage.getItem("pricingcalc_catalog_live");
-    if (cached) {
-      try {
-        const parsed = JSON.parse(cached);
-        if (parsed && parsed.services) {
-          setCatalogSource(parsed, "api-cache");
-          return parsed;
-        }
-      } catch (_) { }
-    }
-    
-    // Fall back to static catalog.json file.
+    // Live/localStorage cache branch disabled — see note above.
     try {
       const r = await fetch("catalog.json", { cache: "no-store" });
       if (r.ok) {
@@ -30974,7 +30946,7 @@
         }
       }
     } catch (_) { /* file:// — fall through */ }
-    
+
     // Fall back to inlined catalog in HTML.
     const inline = $("#inlineCatalog").textContent.trim();
     if (inline) {
@@ -30987,17 +30959,10 @@
     throw new Error("Could not load catalog.json");
   }
 
-  /**
-   * Fetch live pricing from the public Azure Pricing API.
-   * Returns a catalog matching the current schema, or null on failure.
-   * 
-   * The API endpoint (https://prices.azure.com/api/retail/prices) is:
-   * - Public and unauthenticated
-   * - CORS-enabled
-   * - Returns prices for all Azure services in specified regions
-   * 
-   * On success, caches the result in localStorage for 24 hours.
-   */
+  /* eslint-disable no-unused-vars */
+  // NOTE: The block below implements the live Azure Pricing API load flow.
+  // It is kept intact for future re-enable but is not wired up in boot().
+  /*
   async function fetchLivePricingCatalog(forceRefresh) {
     const CACHE_KEY = "pricingcalc_catalog_live";
     const CACHE_EXPIRY_KEY = "pricingcalc_catalog_live_expiry";
@@ -31081,19 +31046,11 @@
       return null;
     }
   }
+  */
+  /* eslint-enable no-unused-vars */
 
   // ---------- Helpers ----------
-  function setLiveStatus(message, debugText) {
-    const status = $("#liveStatus");
-    if (status) status.textContent = message || "";
-    const details = $("#liveDebug");
-    const pre = $("#liveDebugText");
-    if (!details || !pre) return;
-    const hasDebug = !!(debugText && String(debugText).trim());
-    details.hidden = !hasDebug;
-    pre.textContent = hasDebug ? String(debugText) : "";
-    if (!hasDebug) details.open = false;
-  }
+  function setLiveStatus(_message, _debugText) { /* API integration disabled */ }
 
   function setCatalogSource(cat, fallbackKind) {
     const src = (cat && cat.dataSource) || {};
@@ -31205,19 +31162,8 @@
   }
 
   function renderPricingModePicker() {
-    const root = $("#pricingMode");
-    if (!root) return;
-    for (const btn of root.querySelectorAll("button")) {
-      btn.classList.toggle("active", btn.dataset.mode === pricingMode);
-      btn.addEventListener("click", () => {
-        pricingMode = btn.dataset.mode;
-        for (const b of root.querySelectorAll("button")) {
-          b.classList.toggle("active", b.dataset.mode === pricingMode);
-        }
-        if (activeServiceId) renderSkuPicker();
-        recompute();
-      });
-    }
+    // Global pricing-model picker replaced by per-line-item selectors.
+    // Function retained as a no-op to preserve call sites.
   }
 
   function renderServiceGrid() {
@@ -31288,19 +31234,14 @@
     const q = pickerQuery.trim().toLowerCase();
     const allSkus = (svc.skus || []);
     const filtered = [];
-    const discountModeActive = pricingMode !== "payg";
     for (let i = 0; i < allSkus.length; i++) {
       const s = allSkus[i];
       if (q && !(s.productName + " " + s.skuName + " " + s.meterType).toLowerCase().includes(q)) continue;
       if (rateAt(s, region.id) == null) continue;
-      if (discountModeActive && discountAt(s, region.id, pricingMode) <= 0) continue;
       filtered.push({ sku: s, idx: i });
     }
     if (filtered.length === 0) {
-      const msg = discountModeActive
-        ? 'No meters in this service offer ' + PRICING_MODE_LABELS[pricingMode] + ' pricing in ' + region.name + '.'
-        : 'No meters match your search.';
-      list.innerHTML = '<div class="empty-list">' + escapeHtml(msg) + '</div>';
+      list.innerHTML = '<div class="empty-list">No meters match your search.</div>';
       return;
     }
     const MAX_RENDER = 200;
@@ -31308,22 +31249,13 @@
       const row = document.createElement("div");
       row.className = "sku-row";
       const baseRate = rateAt(sku, region.id);
-      const effRate = effectiveRate(sku, region.id, pricingMode);
-      const disc = discountAt(sku, region.id, pricingMode);
-      let rateStr;
-      if (effRate == null) {
-        rateStr = '<span class="unavail">not available</span>';
-      } else if (pricingMode !== "payg" && disc > 0) {
-        rateStr = fmtRate(effRate) +
-          ' <span style="color:var(--ink-3)">' + escapeHtml(unitSuffix(sku.unitType)) +
-          ' · −' + Math.round(disc * 100) + '%</span>';
-      } else {
-        rateStr = fmtRate(baseRate) +
-          ' <span style="color:var(--ink-3)">' + escapeHtml(unitSuffix(sku.unitType)) + '</span>';
-      }
+      const modes = availableModes(sku, region.id);
+      const rateStr = fmtRate(baseRate) +
+        ' <span style="color:var(--ink-3)">' + escapeHtml(unitSuffix(sku.unitType)) + '</span>';
       let compareStr = '';
-      if (effRate != null && pricingMode !== "payg" && disc > 0 && baseRate != null) {
-        compareStr = '<span class="strike">' + fmtRate(baseRate) + '</span> in Pay-as-you-go';
+      if (modes.length > 1) {
+        // At least one discounted model is available for this SKU/region.
+        compareStr = 'Savings Plans / RI available';
       }
       row.innerHTML =
         '<div class="product" title="' + escapeHtml(sku.productName) + '">' + escapeHtml(sku.productName) + '</div>' +
@@ -31331,20 +31263,33 @@
         '<div class="meter" title="' + escapeHtml(sku.meterType) + '">' + escapeHtml(sku.meterType) + '</div>' +
         '<div class="rate">' + rateStr + '</div>' +
         '<div></div>' +
-        '<div class="compare">' + compareStr + '</div>';
+        '<div class="compare">' + escapeHtml(compareStr) + '</div>';
       const addBtn = document.createElement("button");
       addBtn.type = "button";
       addBtn.className = "add";
       addBtn.textContent = "Add";
-      if (effRate == null) addBtn.disabled = true;
       addBtn.addEventListener("click", () => addItem(svc.id, idx));
       row.children[4].appendChild(addBtn);
       list.appendChild(row);
     }
   }
 
+  function availableModes(sku, rid) {
+    // Returns the ordered list of pricing modes this SKU offers in this region.
+    // PAYG is always first; discount modes only appear if the SKU has a
+    // positive discount for them in this region.
+    const modes = ["payg"];
+    for (const m of ["sp1y", "sp3y", "ri1y", "ri3y"]) {
+      if (discountAt(sku, rid, m) > 0) modes.push(m);
+    }
+    return modes;
+  }
+
   function renderFooter() {
-    $("#currencyLabel").textContent = catalog.currency || "USD";
+    const currency = catalog.currency || "USD";
+    $("#currencyLabel").textContent = currency;
+    const annualCur = $("#currencyLabelAnnual");
+    if (annualCur) annualCur.textContent = currency;
     const stamp = $("#dataSourceStamp");
     if (stamp) {
       stamp.textContent = "Data source: " + catalogSourceLabel + " · Updated: " +
@@ -31376,11 +31321,14 @@
       card.innerHTML = '<header><div class="title"><h3>Unknown item</h3></div></header>';
       return card;
     }
-    const cost = computeCost(it);
     const region = currentRegion();
+    // Normalize the item's mode against what this SKU actually offers.
+    const modes = availableModes(sku, region.id);
+    if (!modes.includes(it.mode)) it.mode = "payg";
+    const cost = computeCost(it);
     const baseRate = rateAt(sku, region.id);
-    const effRate = effectiveRate(sku, region.id, pricingMode);
-    const disc = discountAt(sku, region.id, pricingMode);
+    const effRate = effectiveRate(sku, region.id, it.mode);
+    const disc = discountAt(sku, region.id, it.mode);
     const rateAvail = effRate != null;
 
     const header = document.createElement("header");
@@ -31441,17 +31389,69 @@
     grid.appendChild(qtyField);
     card.appendChild(grid);
 
+    // Per-line-item pricing model selector (Azure-calculator style).
+    const priceSelectRow = document.createElement("div");
+    priceSelectRow.className = "pricing-select";
+
+    if (modes.length <= 1) {
+      // Only pay-as-you-go is available for this SKU/region — make it explicit
+      // instead of showing a disabled dropdown that looks broken.
+      const labelEl = document.createElement("span");
+      labelEl.className = "pm-only-label";
+      labelEl.textContent = "Pricing model";
+      const noteEl = document.createElement("span");
+      noteEl.className = "pm-only-note";
+      noteEl.textContent = "Only pay-as-you-go pricing is available for this SKU.";
+      priceSelectRow.appendChild(labelEl);
+      priceSelectRow.appendChild(noteEl);
+      card.appendChild(priceSelectRow);
+    } else {
+      const selectId = "mode_" + it.id;
+      const labelEl = document.createElement("label");
+      labelEl.setAttribute("for", selectId);
+      labelEl.textContent = "Pricing model";
+      priceSelectRow.appendChild(labelEl);
+      const modeSelect = document.createElement("select");
+      modeSelect.id = selectId;
+      for (const m of modes) {
+        const opt = document.createElement("option");
+        opt.value = m;
+        let label = PRICING_MODE_LABELS[m];
+        if (m !== "payg") {
+          const d = discountAt(sku, region.id, m);
+          if (d > 0) label += " (~" + Math.round(d * 100) + "% off)";
+        }
+        opt.textContent = label;
+        if (m === it.mode) opt.selected = true;
+        modeSelect.appendChild(opt);
+      }
+      modeSelect.addEventListener("change", () => {
+        it.mode = modeSelect.value;
+        recompute();
+      });
+      priceSelectRow.appendChild(modeSelect);
+
+      if (rateAvail && it.mode !== "payg" && disc > 0 && baseRate != null) {
+        const paygCost = baseRate * ((it.count == null) ? 1 : (it.count || 0)) * (it.qty || 0);
+        const savings = paygCost - cost;
+        if (savings > 0.005) {
+          const s = document.createElement("span");
+          s.className = "savings";
+          s.textContent = "Saves " + money(savings) + " / mo vs. PAYG";
+          priceSelectRow.appendChild(s);
+        }
+      }
+      card.appendChild(priceSelectRow);
+    }
+
     const rateLine = document.createElement("div");
     rateLine.className = "unit-rate";
     if (rateAvail) {
       let txt = "Rate: " + fmtRate(effRate) + " " + unitSuffix(sku.unitType) +
         " \u00b7 region: " + region.name;
-      if (pricingMode !== "payg" && disc > 0) {
-        txt += " \u00b7 " + PRICING_MODE_LABELS[pricingMode] +
+      if (it.mode !== "payg" && disc > 0) {
+        txt += " \u00b7 " + PRICING_MODE_LABELS[it.mode] +
           " \u2212" + Math.round(disc * 100) + "% (base " + fmtRate(baseRate) + ")";
-      } else if (pricingMode !== "payg") {
-        txt += " \u00b7 " + PRICING_MODE_LABELS[pricingMode] +
-          " not offered for this meter \u2014 using PAYG";
       }
       rateLine.textContent = txt;
     } else {
@@ -31473,6 +31473,7 @@
       skuKey: skuKey(serviceId, skuIdx),
       count: 1,
       qty: qtyDefault(sku.unitType),
+      mode: "payg",
     });
     recompute();
   }
@@ -31501,22 +31502,25 @@
       const svc = catalog.services.find(s => s.id === it.serviceId);
       const sku = findSku(it.serviceId, it.skuKey);
       if (!svc || !sku) continue;
-      const eff = effectiveRate(sku, region.id, pricingMode);
-      const disc = discountAt(sku, region.id, pricingMode);
+      const mode = it.mode || "payg";
+      const eff = effectiveRate(sku, region.id, mode);
+      const disc = discountAt(sku, region.id, mode);
       rows.push([
         svc.name, sku.productName, sku.skuName, sku.meterType,
         String(it.count == null ? 1 : it.count),
         String(it.qty),
         eff != null ? eff.toString() : "",
-        PRICING_MODE_LABELS[pricingMode],
+        PRICING_MODE_LABELS[mode],
         disc > 0 ? (Math.round(disc * 10000) / 100).toString() : "0",
         computeCost(it).toFixed(2),
         region.name,
       ]);
     }
     rows.push([]);
-    rows.push(["TOTAL", "", "", "", "", "", "", PRICING_MODE_LABELS[pricingMode], "",
+    rows.push(["TOTAL (monthly)", "", "", "", "", "", "", "", "",
                computeTotal().toFixed(2), region.name]);
+    rows.push(["TOTAL (annual)", "", "", "", "", "", "", "", "",
+               (computeTotal() * 12).toFixed(2), region.name]);
     const csv = rows.map(r => r.map(c =>
       '"' + String(c).replace(/"/g, '""') + '"').join(",")).join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -31532,7 +31536,7 @@
   function computeCost(it) {
     const sku = findSku(it.serviceId, it.skuKey);
     if (!sku) return 0;
-    const rate = effectiveRate(sku, regionId, pricingMode);
+    const rate = effectiveRate(sku, regionId, it.mode || "payg");
     if (rate == null) return 0;
     const units = (it.count == null) ? 1 : (it.count || 0);
     return rate * units * (it.qty || 0);
@@ -31543,7 +31547,10 @@
 
   function recompute() {
     renderItems();
-    $("#totalAmount").textContent = money(computeTotal());
+    const total = computeTotal();
+    $("#totalAmount").textContent = money(total);
+    const annual = $("#annualAmount");
+    if (annual) annual.textContent = money(total * 12);
     const bd = $("#breakdown");
     if (items.length === 0) {
       bd.innerHTML = '<div class="empty-mini">No items yet</div>';

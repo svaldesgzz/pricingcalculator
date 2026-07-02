@@ -1,9 +1,10 @@
 {
-  "generatedAt": "2026-05-28T18:54:01+00:00",
+  "generatedAt": "2026-07-02T21:57:50+00:00",
   "dataSource": {
     "kind": "uploaded-file",
-    "label": "Uploaded file snapshot",
-    "generator": "scripts/extract_catalog.py"
+    "label": "Full AEZ List (uploaded file snapshot)",
+    "generator": "scripts/extract_catalog.py",
+    "sourceFile": "20260626-Full AEZ List June 2026.xlsx"
   },
   "currency": "USD",
   "regions": [
@@ -25493,7 +25494,7 @@
       "id": "storage",
       "name": "Storage",
       "icon": "disk",
-      "skuCount": 231,
+      "skuCount": 229,
       "skus": [
         {
           "productName": "Azure Elastic SAN",
@@ -26464,8 +26465,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 1560.96,
-            "perth": 1324.795824,
+            "luxembourg": 0.01,
+            "perth": 0.01,
             "losangeles": 946.08
           }
         },
@@ -26475,8 +26476,6 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 2973.255,
-            "perth": 2523.424618,
             "losangeles": 0.0
           }
         },
@@ -26486,8 +26485,6 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 5946.51,
-            "perth": 5046.835233,
             "losangeles": 0.0
           }
         },
@@ -26940,8 +26937,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 1560.96,
-            "perth": 1324.795824,
+            "luxembourg": 0.01,
+            "perth": 0.01,
             "losangeles": 946.08
           }
         },
@@ -26971,18 +26968,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 2973.255,
-            "perth": 2523.424618,
-            "losangeles": 1802.06
-          }
-        },
-        {
-          "productName": "Premium SSD Managed Disks",
-          "skuName": "P70 - Special",
-          "meterType": "1 Disk/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 1572.864
+            "luxembourg": 0.01,
+            "perth": 0.01
           }
         },
         {
@@ -27002,18 +26989,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 5946.51,
-            "perth": 5046.835233,
-            "losangeles": 3604.11
-          }
-        },
-        {
-          "productName": "Premium SSD Managed Disks",
-          "skuName": "P80 - Special",
-          "meterType": "1 Disk/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 3145.632
+            "luxembourg": 0.01,
+            "perth": 0.01
           }
         },
         {
@@ -27286,9 +27263,7 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 1716.39,
-            "perth": 0.01,
-            "losangeles": 1310.72
+            "perth": 0.01
           }
         },
         {
@@ -27760,7 +27735,7 @@
           "unitType": "month",
           "rates": {
             "luxembourg": 921.6,
-            "perth": 1170.062674,
+            "perth": 0.01,
             "losangeles": 921.6
           }
         },
@@ -27792,9 +27767,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 1843.2,
-            "perth": 2340.139351,
-            "losangeles": 1843.2
+            "luxembourg": 0.01,
+            "perth": 0.01
           }
         },
         {
@@ -27825,9 +27799,8 @@
           "meterType": "1 Disk/Month",
           "unitType": "month",
           "rates": {
-            "luxembourg": 3686.4,
-            "perth": 4680.278702,
-            "losangeles": 3686.4
+            "luxembourg": 0.01,
+            "perth": 0.01
           }
         },
         {
@@ -27940,7 +27913,7 @@
       "id": "expressroute",
       "name": "ExpressRoute",
       "icon": "bandwidth",
-      "skuCount": 95,
+      "skuCount": 89,
       "skus": [
         {
           "productName": "ExpressRoute",
@@ -27948,7 +27921,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 6450.0
+            "losangeles": 436.0
           }
         },
         {
@@ -27975,7 +27948,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 54300.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28029,7 +28002,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 12900.0
+            "losangeles": 872.0
           }
         },
         {
@@ -28056,7 +28029,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 1300.0
+            "losangeles": 295.0
           }
         },
         {
@@ -28083,7 +28056,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 28650.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28137,7 +28110,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 3150.0
+            "losangeles": 690.0
           }
         },
         {
@@ -28227,16 +28200,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 20000.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Direct",
-          "skuName": "10 Gbps",
-          "meterType": "1 Port/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 56000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28281,16 +28245,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 200000.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Direct",
-          "skuName": "100 Gbps",
-          "meterType": "1 Port/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 250000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28335,7 +28290,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 4000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28371,7 +28326,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 5000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28407,7 +28362,7 @@
           "meterType": "1 Circuit/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 2000.0
+            "losangeles": 0.0
           }
         },
         {
@@ -28452,7 +28407,7 @@
           "meterType": "1 Port/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 3300.0
+            "losangeles": 0.01
           }
         },
         {
@@ -28461,7 +28416,7 @@
           "meterType": "1 Port/Month",
           "unitType": "month",
           "rates": {
-            "losangeles": 33000.0
+            "losangeles": 0.01
           }
         },
         {
@@ -28538,15 +28493,6 @@
         {
           "productName": "ExpressRoute Global Reach",
           "skuName": "10 Gbps",
-          "meterType": "1 Circuit/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 5000.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Global Reach",
-          "skuName": "10 Gbps",
           "meterType": "Data Transfer In (GB)",
           "unitType": "unit",
           "rates": {
@@ -28560,15 +28506,6 @@
           "unitType": "unit",
           "rates": {
             "losangeles": 0.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Global Reach",
-          "skuName": "100 Gbps",
-          "meterType": "1 Circuit/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 21250.0
           }
         },
         {
@@ -28673,15 +28610,6 @@
         {
           "productName": "ExpressRoute Global Reach",
           "skuName": "40 Gbps",
-          "meterType": "1 Circuit/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 10500.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Global Reach",
-          "skuName": "40 Gbps",
           "meterType": "Data Transfer In (GB)",
           "unitType": "unit",
           "rates": {
@@ -28695,15 +28623,6 @@
           "unitType": "unit",
           "rates": {
             "losangeles": 0.0
-          }
-        },
-        {
-          "productName": "ExpressRoute Global Reach",
-          "skuName": "5 Gbps",
-          "meterType": "1 Circuit/Month",
-          "unitType": "month",
-          "rates": {
-            "losangeles": 2180.0
           }
         },
         {
@@ -30284,36 +30203,6 @@
             "luxembourg": 0.0675,
             "perth": 0.05,
             "losangeles": 0.05
-          }
-        }
-      ]
-    },
-    {
-      "id": "azure-site-recovery",
-      "name": "Azure Site Recovery",
-      "icon": "disk",
-      "skuCount": 2,
-      "skus": [
-        {
-          "productName": "Azure Site Recovery",
-          "skuName": "Azure",
-          "meterType": "1 VM Replicated to Azure/Month",
-          "unitType": "month",
-          "rates": {
-            "luxembourg": 33.75,
-            "perth": 0.01,
-            "losangeles": 25.0
-          }
-        },
-        {
-          "productName": "Azure Site Recovery",
-          "skuName": "System Center",
-          "meterType": "1 VM Replicated to System Center/Month",
-          "unitType": "month",
-          "rates": {
-            "luxembourg": 21.6,
-            "perth": 0.01,
-            "losangeles": 16.0
           }
         }
       ]

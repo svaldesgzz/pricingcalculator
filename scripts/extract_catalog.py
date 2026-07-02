@@ -1,7 +1,14 @@
 """
-Build catalog.json by reading the raw meter-list xlsx files for all three
-Azure Extended Zones (Luxembourg, Perth, Los Angeles) and merging them into
+Build catalog.json by reading the "Full AEZ List" workbook and merging it into
 a single generic catalog the calculator can render.
+
+The current source is the DRM-protected workbook:
+    20260626-Full AEZ List June 2026.xlsx
+
+Because the workbook has an Information-Protection sensitivity label, plain
+openpyxl / xlrd cannot open it. `scripts/refresh.ps1` handles that up-front by
+using Excel COM to export the sheet to `_tmp_aez.csv`. This script prefers the
+CSV when present and only falls back to the raw xlsx (unprotected files).
 
 The catalog shape is intentionally generic: every (service, product, sku,
 meter) tuple becomes one entry with a per-region rate map. The UI groups
@@ -23,8 +30,12 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 WEB_DIR = ROOT / "web"
 
-LUX_XLSX = ROOT / "20260513 - Luxembourg SKU Pricing May 2026.xlsx"
-PERTH_LA_XLSX = ROOT / "20260519 - Perth + LA - Meter List (May19).xlsx"
+AEZ_XLSX = ROOT / "20260626-Full AEZ List June 2026.xlsx"
+AEZ_CSV = ROOT / "_tmp_aez.csv"  # produced by refresh.ps1 via Excel COM
+
+# --- Legacy sources (kept for reference; no longer read) ---
+# LUX_XLSX = ROOT / "20260513 - Luxembourg SKU Pricing May 2026.xlsx"
+# PERTH_LA_XLSX = ROOT / "20260519 - Perth + LA - Meter List (May19).xlsx"
 
 REGIONS = [
     {"id": "luxembourg", "name": "Luxembourg"},
@@ -59,15 +70,12 @@ SERVICE_ICON = {
 # Azure Extended Zones service allowlist.
 # Source: https://learn.microsoft.com/azure/extended-zones/overview
 # Only services explicitly listed in the "Available Azure services and features"
-# table are included. Services present in the source xlsx but NOT in the table
-# (e.g. Application Gateway, NAT Gateway, Network Watcher, Bandwidth, Cloud
-# Services, Specialized Compute) are intentionally excluded.
+# table are included, minus the additional exclusion list below.
 ALLOWED_SERVICES = {
     "Virtual Machines",
     "Azure Kubernetes Service",
     "Storage",
     "Backup",
-    "Azure Site Recovery",
     "ExpressRoute",
     "Virtual Network",
     "Load Balancer",
@@ -75,13 +83,15 @@ ALLOWED_SERVICES = {
     "Azure DDOS Protection",
 }
 
-# For Virtual Machines the Extended Zones table only lists general-purpose
-# A, B, D, E, F series plus the NVadsA10 v5 GPU series. Everything else
-# (Internal GPGen8, Gen7 LI, etc.) is excluded.
-_VM_SERIES_RE = re.compile(
-    r"^(?:NVadsA10v5|[ABDEF](?:[a-z]*v?\d*|S(?:v\d+)?)?(?:\s|$))",
-    re.IGNORECASE,
-)
+# Services intentionally excluded from the calculator until they land in
+# the Extended Zones offering. Update this list as availability changes.
+EXCLUDED_SERVICES = {
+    "Application Gateway",
+    "Azure Site Recovery",
+    "NAT Gateway",
+    "Network Watcher",
+    "Specialized Compute",
+}
 
 
 def _vm_series_token(product_name: str) -> str:
@@ -100,10 +110,8 @@ def is_allowed_vm(product_name: str) -> bool:
     low = token.lower()
     if low.startswith("nvadsa10"):
         return True
-    # Reject known non-allowed series tokens explicitly.
     if low.startswith(("internal", "gen", "cloud")):
         return False
-    # Series token must start with A, B, D, E, or F.
     first = token[0].upper()
     return first in {"A", "B", "D", "E", "F"}
 
@@ -113,7 +121,7 @@ def _read_xlsx(path: Path) -> pd.DataFrame:
     tmp = ROOT / f"_tmp_{path.stem}.xlsx"
     shutil.copyfile(path, tmp)
     try:
-        df = pd.read_excel(tmp)
+        df = pd.read_excel(tmp, engine="openpyxl")
     finally:
         try:
             tmp.unlink()
@@ -123,17 +131,31 @@ def _read_xlsx(path: Path) -> pd.DataFrame:
 
 
 def load_all_rows() -> pd.DataFrame:
-    """Load all latest rows for our 3 regions (both OnDemand and ReservedInstance)."""
-    frames = []
-    for path in (LUX_XLSX, PERTH_LA_XLSX):
-        if not path.exists():
-            print(f"WARNING: {path.name} not found, skipping", file=sys.stderr)
-            continue
-        df = _read_xlsx(path)
-        frames.append(df)
-    if not frames:
-        raise RuntimeError("No source xlsx files could be read")
-    df = pd.concat(frames, ignore_index=True, sort=False)
+    """Load all latest rows for our 3 regions.
+
+    Prefers the pre-exported `_tmp_aez.csv` (produced by refresh.ps1 to work
+    around the workbook's IRM sensitivity label). Falls back to reading the
+    xlsx directly if the CSV is missing (works only for unprotected files).
+    """
+    if AEZ_CSV.exists():
+        print(f"Reading {AEZ_CSV.name} (CSV export)", file=sys.stderr)
+        df = pd.read_csv(AEZ_CSV, low_memory=False)
+    elif AEZ_XLSX.exists():
+        print(f"Reading {AEZ_XLSX.name} directly", file=sys.stderr)
+        df = _read_xlsx(AEZ_XLSX)
+    else:
+        raise RuntimeError(
+            f"Neither {AEZ_CSV.name} nor {AEZ_XLSX.name} was found. "
+            "Run scripts/refresh.ps1 or export the xlsx to CSV manually."
+        )
+    # Excel COM writes CSVs with the user's locale (thousand separators, etc.).
+    # Coerce numeric columns back to floats.
+    for col in ("CurrentRate", "SavingsPlanOneYearDiscount",
+                "SavingsPlanThreeYearsDiscount", "RIDiscount", "SpotDiscount"):
+        if col in df.columns:
+            if df[col].dtype == object:
+                df[col] = df[col].astype(str).str.replace(",", "", regex=False)
+            df[col] = pd.to_numeric(df[col], errors="coerce")
     df = df[df["IsLatest"] == True]  # noqa: E712
     df = df[df["AvailabilityRegion"].isin(REGION_LABEL_TO_ID)]
     df = df.dropna(subset=["MeterType"])
@@ -152,13 +174,11 @@ def unit_type_for_meter(meter: str) -> str:
 
 
 def build_catalog(df: pd.DataFrame) -> dict:
-    # Partition: PAYG rows (OnDemand+Standard) drive the catalog skeleton + rates.
     payg = df[(df["SalesMotion"] == "OnDemand") & (df["RateType"] == "Standard")]
     payg = payg.dropna(subset=["CurrentRate"])
     ri = df[df["SalesMotion"] == "ReservedInstance"].copy()
     ri = ri.dropna(subset=["RIDiscount"])
 
-    # PAYG rate per (svc, prod, sku, meter, region): max within group.
     payg_grouped = (
         payg.groupby(
             ["ServiceName", "ProductName", "SkuName", "MeterType", "AvailabilityRegion"],
@@ -172,7 +192,6 @@ def build_catalog(df: pd.DataFrame) -> dict:
         .reset_index()
     )
 
-    # RI discount per (svc, prod, sku, meter, region, duration): max.
     ri_grouped = (
         ri.groupby(
             ["ServiceName", "ProductName", "SkuName", "MeterType",
@@ -183,7 +202,6 @@ def build_catalog(df: pd.DataFrame) -> dict:
         .reset_index()
     )
 
-    # Pivot regions onto columns for each metric.
     def _pivot(frame, value_col):
         return frame.pivot_table(
             index=["ServiceName", "ProductName", "SkuName", "MeterType"],
@@ -195,8 +213,6 @@ def build_catalog(df: pd.DataFrame) -> dict:
     rate_pv = _pivot(payg_grouped, "CurrentRate")
     sp1y_pv = _pivot(payg_grouped, "SP1Y")
     sp3y_pv = _pivot(payg_grouped, "SP3Y")
-
-    # RI: pivot per duration separately.
     ri1y_pv = _pivot(ri_grouped[ri_grouped["ReservationDuration"] == "1 Year"], "RIDiscount")
     ri3y_pv = _pivot(ri_grouped[ri_grouped["ReservationDuration"] == "3 Years"], "RIDiscount")
 
@@ -207,10 +223,10 @@ def build_catalog(df: pd.DataFrame) -> dict:
         sku = str(sku) if pd.notna(sku) else ""
         meter = str(meter) if pd.notna(meter) else ""
 
-        # Extended Zones service allowlist (drop anything not in the table).
+        if svc in EXCLUDED_SERVICES:
+            continue
         if svc not in ALLOWED_SERVICES:
             continue
-        # Within Virtual Machines, only keep A/B/D/E/F + NVadsA10v5 series.
         if svc == "Virtual Machines" and not is_allowed_vm(product):
             continue
 
@@ -268,8 +284,9 @@ def build_catalog(df: pd.DataFrame) -> dict:
         "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "dataSource": {
             "kind": "uploaded-file",
-            "label": "Uploaded file snapshot",
+            "label": "Full AEZ List (uploaded file snapshot)",
             "generator": "scripts/extract_catalog.py",
+            "sourceFile": AEZ_XLSX.name,
         },
         "currency": "USD",
         "regions": REGIONS,
@@ -282,6 +299,7 @@ def main():
     print(f"Loaded {len(df):,} latest rows across regions:")
     print(df["AvailabilityRegion"].value_counts().to_string())
     print(f"  by SalesMotion: {df['SalesMotion'].value_counts().to_dict()}")
+    print(f"  excluded services: {sorted(EXCLUDED_SERVICES)}")
 
     catalog = build_catalog(df)
     total_skus = sum(s["skuCount"] for s in catalog["services"])

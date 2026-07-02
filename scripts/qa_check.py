@@ -31,9 +31,25 @@ def main() -> int:
     # Services
     services = catalog["services"]
     failures += not check(
-        "At least 10 services present",
-        len(services) >= 10,
+        "At least 8 services present",
+        len(services) >= 8,
         f"count={len(services)}",
+    )
+
+    # Excluded services must NOT appear in the catalog.
+    excluded = {
+        "Application Gateway",
+        "Azure Site Recovery",
+        "NAT Gateway",
+        "Network Watcher",
+        "Specialized Compute",
+    }
+    present_names = {s["name"] for s in services}
+    leaked = sorted(excluded & present_names)
+    failures += not check(
+        "No excluded services present in catalog",
+        not leaked,
+        f"leaked={leaked}",
     )
 
     # SKU counts and per-region rates
