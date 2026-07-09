@@ -31,6 +31,29 @@
              BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   }
 
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --azure-blue-600: #2B9AF3;
+      --azure-blue-700: #57ACF5;
+      --azure-blue-050: #16324B;
+      --surface-0: #1A1A1A;
+      --surface-1: #242424;
+      --surface-2: #2E2E2E;
+      --ink-1: #F3F3F3;
+      --ink-2: #B9B9B9;
+      --ink-3: #8F8F8F;
+      --stroke: #383838;
+      --stroke-strong: #4A4A4A;
+      --warning-bg: #3A3320;
+      --warning-ink: #F5D98A;
+      --danger: #F1707A;
+    }
+    .btn.danger { border-color: #6E3A3D; }
+    .btn.danger:hover { background: #3A2426; }
+    .line-item header button.remove:hover { background: #3A2426; border-color: #6E3A3D; }
+    .line-item .pricing-select .savings { color: #4CC24C; }
+  }
+
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
@@ -68,6 +91,12 @@
   .brand-text { display: flex; flex-direction: column; min-width: 0; }
   .brand-text strong { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; }
   .brand-text span { color: var(--ink-2); font-size: 12px; }
+  .last-updated {
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-3);
+    margin-top: 10px;
+  }
   .region-picker {
     margin-left: auto;
     display: flex; align-items: center; gap: 10px;
@@ -89,7 +118,10 @@
     border-color: var(--azure-blue-600);
     box-shadow: 0 0 0 2px rgba(0,120,212,.25);
   }
-  select { padding-right: 28px; cursor: pointer; }
+  select {
+    padding-right: 28px; cursor: pointer;
+    height: 36px; line-height: 1.5;
+  }
 
   main {
     display: grid;
@@ -202,6 +234,11 @@
   .sku-row .compare .strike { text-decoration: line-through; color: var(--ink-3); }
   .sku-row:last-child { border-bottom: none; }
   .sku-row:hover { background: var(--azure-blue-050); }
+  .sku-row .product,
+  .sku-row .sku,
+  .sku-row .meter {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+  }
   .sku-row .product { color: var(--ink-2); font-size: 12px; }
   .sku-row .sku { font-weight: 600; }
   .sku-row .meter { color: var(--ink-2); font-size: 12px; }
@@ -275,11 +312,21 @@
     margin: 2px 0 0; font-size: 12px; color: var(--ink-2);
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
+  .line-item header .hrs-note {
+    margin: 3px 0 0; font-size: 11px; font-weight: 600;
+    color: var(--azure-blue-700);
+  }
   .line-item header .price {
     font-variant-numeric: tabular-nums;
     font-weight: 600;
     color: var(--ink-1);
     white-space: nowrap;
+    display: flex; flex-direction: column; align-items: flex-end;
+    text-align: right;
+  }
+  .line-item header .price .price-annual {
+    font-size: 11px; font-weight: 500; color: var(--ink-3);
+    margin-top: 2px;
   }
   .line-item header button.remove {
     background: transparent;
@@ -372,9 +419,10 @@
   .summary .breakdown .empty-mini {
     color: var(--ink-3); font-size: 13px; text-align: center; padding: 6px 0;
   }
-  .actions { display: flex; gap: 8px; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .btn {
-    flex: 1;
+    flex: 1 1 calc(50% - 4px);
+    min-width: 120px;
     height: 36px;
     border-radius: var(--radius-1);
     border: 1px solid var(--stroke-strong);
@@ -388,6 +436,19 @@
   .btn:hover { background: var(--surface-2); }
   .btn.danger { color: var(--danger); border-color: #F5C2C5; }
   .btn.danger:hover { background: #FDE7E9; }
+
+  .toast {
+    position: fixed;
+    left: 50%; bottom: 24px;
+    transform: translateX(-50%) translateY(10px);
+    background: #323130; color: #fff;
+    padding: 10px 16px; border-radius: var(--radius-2);
+    font-size: 13px; box-shadow: var(--shadow-2);
+    opacity: 0; pointer-events: none;
+    transition: opacity 180ms ease, transform 180ms ease;
+    z-index: 1000; max-width: 90vw; text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   footer.site {
     margin-top: 32px;
@@ -541,8 +602,9 @@
 
 
   @media print {
-    .service-grid, .actions, .region-picker, .sku-picker, .pricing-mode { display: none !important; }
+    #pickPanel, .actions, .region-picker, .sku-picker, .pricing-mode, .toast { display: none !important; }
     .summary { position: static; box-shadow: none; }
+    main { grid-template-columns: 1fr; }
     body { background: white; }
   }</style>
 </head>
@@ -590,6 +652,8 @@
     </div>
   </header>
 
+  <div class="last-updated" id="lastUpdated"></div>
+
   <div class="top-notice" role="note">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
       <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1Zm.75 10.5h-1.5v-1.5h1.5v1.5Zm0-3h-1.5v-4h1.5v4Z"/>
@@ -597,6 +661,7 @@
     <div class="notice-body">
       <strong class="notice-title">Please note:</strong>
       <ul class="notice-list">
+        <li id="dataSourceNote">Data source: loading…</li>
         <li>Pricing is for approximate estimation only and should not be considered an official quote. Figures do not include taxes, support, or any discount programs. Verify final figures with your Microsoft account team.</li>
         <li>While this tool provides the right pricing for a given SKU, please refer to the <a href="https://learn.microsoft.com/azure/extended-zones/overview" target="_blank" rel="noopener">Azure Extended Zones documentation</a> for service availability.</li>
       </ul>
@@ -619,8 +684,8 @@
   <main>
     <div class="left-pane">
 
-      <section class="panel">
-        <h2>① Pick a service</h2>
+      <section class="panel" id="pickPanel">
+        <h2>① Pick a service and SKU</h2>
         <p class="panel-note">If available, Savings Plans and Reserved Instances pricing will be shown upon selection of specific SKUs.</p>
         <div class="service-grid" id="serviceGrid"></div>
         <div id="skuPicker"></div>
@@ -630,8 +695,8 @@
         <h2>② Edit selection details</h2>
         <div id="lineItems">
           <div class="empty" id="emptyState">
-            <div class="big">No services yet</div>
-            <div>Pick a service above and add SKUs to start estimating your monthly bill.</div>
+            <div class="big">Start by picking a service, then add SKUs</div>
+            <div>Choose a service under step ① above and add one or more SKUs. Each SKU you add appears here so you can set quantities and see your estimate on the right.</div>
           </div>
         </div>
       </section>
@@ -648,14 +713,14 @@
       <div class="total" id="annualAmount" aria-live="polite">$0.00</div>
       <div class="currency-line"><span id="currencyLabelAnnual">USD</span> · annual estimate</div>
 
-      <div class="data-source-line" id="dataSourceStamp">Data source: unknown</div>
-
       <div class="breakdown" id="breakdown">
         <div class="empty-mini">No items yet</div>
       </div>
 
       <div class="actions">
         <button class="btn" id="exportCsv" type="button">Export CSV</button>
+        <button class="btn" id="shareBtn" type="button">Share link</button>
+        <button class="btn" id="printBtn" type="button">Print</button>
         <button class="btn danger" id="resetBtn" type="button">Reset</button>
       </div>
     </aside>
@@ -666,6 +731,8 @@
       <a href="https://learn.microsoft.com/azure/extended-zones/overview" target="_blank" rel="noopener">About Azure Extended Zones ↗</a>
     </div>
   </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
 
 <!-- Inline-fallback copy of the catalog so the page works under file:// where
@@ -30925,6 +30992,7 @@
   async function boot() {
     catalog = await loadCatalog();
     regionId = catalog.regions[0].id;
+    restoreFromHash();
     renderRegionPicker();
     renderServiceGrid();
     renderFooter();
@@ -31290,10 +31358,18 @@
     $("#currencyLabel").textContent = currency;
     const annualCur = $("#currencyLabelAnnual");
     if (annualCur) annualCur.textContent = currency;
-    const stamp = $("#dataSourceStamp");
-    if (stamp) {
-      stamp.textContent = "Data source: " + catalogSourceLabel + " · Updated: " +
-        formatCatalogTimestamp(catalog.generatedAt);
+    const updated = formatCatalogTimestamp(catalog.generatedAt);
+    const note = $("#dataSourceNote");
+    if (note) {
+      note.textContent = "Data source: " + catalogSourceLabel + " · Updated: " + updated;
+    }
+    const lu = $("#lastUpdated");
+    if (lu) {
+      const gen = catalog.generatedAt ? new Date(catalog.generatedAt) : null;
+      const dateOnly = (gen && !Number.isNaN(gen.getTime()))
+        ? gen.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })
+        : updated;
+      lu.textContent = "Last updated: " + dateOnly;
     }
   }
 
@@ -31303,8 +31379,8 @@
     if (items.length === 0) {
       list.innerHTML =
         '<div class="empty">' +
-          '<div class="big">No services yet</div>' +
-          '<div>Pick a service above and add SKUs to start estimating your monthly bill.</div>' +
+          '<div class="big">Start by picking a service, then add SKUs</div>' +
+          '<div>Choose a service under step \u2460 above and add one or more SKUs. Each SKU you add appears here so you can set quantities and see your estimate on the right.</div>' +
         '</div>';
       return;
     }
@@ -31332,13 +31408,21 @@
     const rateAvail = effRate != null;
 
     const header = document.createElement("header");
+    const isHourly = sku.unitType === "hour";
+    const hrsNote = isHourly
+      ? '<div class="hrs-note" title="Billed per hour. Monthly cost assumes ' + HOURS_PER_MONTH +
+        ' hours per month for each instance.">Billed hourly \u00b7 \u00d7 ' + HOURS_PER_MONTH + ' hrs/mo per instance</div>'
+      : '';
     header.innerHTML =
       '<span class="icon">' + (ICONS[svc.icon] || ICONS.vm) + '</span>' +
       '<div class="title">' +
         '<h3>' + escapeHtml(sku.productName + " — " + sku.skuName) + '</h3>' +
         '<div class="sub">' + escapeHtml(svc.name + " · " + sku.meterType) + '</div>' +
+        hrsNote +
       '</div>' +
-      '<span class="price">' + money(cost) + ' / mo</span>';
+      '<span class="price">' + money(cost) + ' / mo' +
+        '<span class="price-annual">' + money(cost * 12) + ' / yr</span>' +
+      '</span>';
     const rm = document.createElement("button");
     rm.type = "button"; rm.className = "remove";
     rm.setAttribute("aria-label", "Remove " + sku.skuName);
@@ -31484,6 +31568,11 @@
   }
 
   function resetAll() {
+    if (items.length > 0 &&
+        !confirm("Reset will clear your current estimate (" + items.length +
+          " item" + (items.length === 1 ? "" : "s") + "). Continue?")) {
+      return;
+    }
     items = [];
     recompute();
   }
@@ -31551,6 +31640,7 @@
     $("#totalAmount").textContent = money(total);
     const annual = $("#annualAmount");
     if (annual) annual.textContent = money(total * 12);
+    updateShareHash();
     const bd = $("#breakdown");
     if (items.length === 0) {
       bd.innerHTML = '<div class="empty-mini">No items yet</div>';
@@ -31575,9 +31665,93 @@
     }[c]));
   }
 
+  // ---------- Share link (URL hash state) ----------
+  function b64urlEncode(str) {
+    return btoa(unescape(encodeURIComponent(str)))
+      .replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function b64urlDecode(str) {
+    let s = str.replace(/-/g, "+").replace(/_/g, "/");
+    while (s.length % 4) s += "=";
+    return decodeURIComponent(escape(atob(s)));
+  }
+  function encodeShareState() {
+    const payload = {
+      r: regionId,
+      i: items.map(it => {
+        const idx = parseInt((it.skuKey.split("::")[1]) || "-1", 10);
+        return [it.serviceId, idx, (it.count == null ? 1 : it.count), it.qty, it.mode || "payg"];
+      }),
+    };
+    try { return "e=" + b64urlEncode(JSON.stringify(payload)); }
+    catch (_) { return ""; }
+  }
+  function updateShareHash() {
+    const enc = items.length ? encodeShareState() : "";
+    try {
+      history.replaceState(null, "", location.pathname + location.search + (enc ? "#" + enc : ""));
+    } catch (_) { /* ignore */ }
+  }
+  function restoreFromHash() {
+    const h = (location.hash || "").replace(/^#/, "");
+    if (!h.startsWith("e=")) return false;
+    let payload;
+    try { payload = JSON.parse(b64urlDecode(h.slice(2))); }
+    catch (_) { return false; }
+    if (!payload || typeof payload !== "object") return false;
+    if (payload.r && catalog.regions.some(r => r.id === payload.r)) {
+      regionId = payload.r;
+    }
+    const restored = [];
+    if (Array.isArray(payload.i)) {
+      for (const entry of payload.i) {
+        if (!Array.isArray(entry)) continue;
+        const serviceId = entry[0];
+        const idx = entry[1];
+        const count = entry[2];
+        const qty = entry[3];
+        const mode = entry[4];
+        const svc = catalog.services.find(s => s.id === serviceId);
+        if (!svc || !svc.skus || !svc.skus[idx]) continue;
+        restored.push({
+          id: "it" + (nextId++),
+          serviceId,
+          skuKey: skuKey(serviceId, idx),
+          count: (typeof count === "number" && count >= 0) ? count : 1,
+          qty: (typeof qty === "number" && qty >= 0) ? qty : 0,
+          mode: PRICING_MODE_LABELS[mode] ? mode : "payg",
+        });
+      }
+    }
+    items = restored;
+    return true;
+  }
+  function shareLink() {
+    updateShareHash();
+    const url = location.href;
+    const copied = () => showToast("Link copied to clipboard \u2014 anyone with it sees this exact estimate.");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(copied, () => window.prompt("Copy this shareable link:", url));
+    } else {
+      window.prompt("Copy this shareable link:", url);
+    }
+  }
+
+  let toastTimer = null;
+  function showToast(msg) {
+    const t = $("#toast");
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 3200);
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     $("#resetBtn").addEventListener("click", resetAll);
     $("#exportCsv").addEventListener("click", exportCsv);
+    $("#shareBtn").addEventListener("click", shareLink);
+    $("#printBtn").addEventListener("click", () => { window.print(); });
     boot().catch(err => {
       document.body.innerHTML =
         '<pre style="padding:20px;color:#D13438">Failed to start: ' +
