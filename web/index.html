@@ -31450,7 +31450,8 @@
       countInput.addEventListener("input", () => {
         const v = Number(countInput.value);
         it.count = Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0;
-        recompute();
+        updateLinePrice(it, card);
+        recomputeSummary();
       });
       countField.appendChild(countInput);
       grid.appendChild(countField);
@@ -31467,7 +31468,8 @@
     qtyInput.addEventListener("input", () => {
       const v = Number(qtyInput.value);
       it.qty = Number.isFinite(v) && v >= 0 ? v : 0;
-      recompute();
+      updateLinePrice(it, card);
+      recomputeSummary();
     });
     qtyField.appendChild(qtyInput);
     grid.appendChild(qtyField);
@@ -31636,6 +31638,13 @@
 
   function recompute() {
     renderItems();
+    recomputeSummary();
+  }
+
+  // Updates the estimate totals, breakdown and share link WITHOUT rebuilding the
+  // line-item inputs. Called on every keystroke in the qty/count fields so the
+  // input the user is typing in keeps focus.
+  function recomputeSummary() {
     const total = computeTotal();
     $("#totalAmount").textContent = money(total);
     const annual = $("#annualAmount");
@@ -31657,6 +31666,15 @@
         '<span>' + money(computeCost(it)) + '</span>';
       bd.appendChild(row);
     }
+  }
+
+  // Refreshes just the per-line monthly/annual price shown in a line-item header.
+  function updateLinePrice(it, card) {
+    const priceEl = card.querySelector("header .price");
+    if (!priceEl) return;
+    const cost = computeCost(it);
+    priceEl.innerHTML = money(cost) + ' / mo' +
+      '<span class="price-annual">' + money(cost * 12) + ' / yr</span>';
   }
 
   function escapeHtml(s) {
